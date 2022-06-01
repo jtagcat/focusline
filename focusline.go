@@ -70,12 +70,12 @@ func main() {
 // mode:  1: left-align all lines, focus last line, prefer left
 // mode:  2: right-align all lines, focus last line, prefer right
 func FocusReader(r io.Reader, focus, lenTarget uint, mode int) (w []string, _ error) {
-	var prefBool, focusAll bool
+	var prefRight, focusAll bool
 	switch mode {
 	case -1, 1:
-		prefBool = false
+		prefRight = false
 	case 0, 2:
-		prefBool = true
+		prefRight = true
 	default:
 		return w, fmt.Errorf("runtime enum: FocusReader: mode %d is invalid", mode)
 	}
@@ -92,15 +92,19 @@ func FocusReader(r io.Reader, focus, lenTarget uint, mode int) (w []string, _ er
 		line := StringsSplitEveryN(scanner.Text(), lenTarget)
 		for _, l := range line {
 			if focusAll {
-				w = append(w, Focus(l, focus, lenTarget, prefBool))
+				w = append(w, Focus(l, focus, lenTarget, prefRight))
 			} else {
-				w = append(w, Align(l, lenTarget, prefBool))
+				if prefRight {
+					w = append(w, AlignRight(l, lenTarget))
+					continue
+				}
+				w = append(w, l)
 			}
 		}
 	}
 	if !focusAll {
 		last := len(w) - 1
-		w[last] = Focus(strings.TrimSpace(w[last]), focus, lenTarget, prefBool)
+		w[last] = Focus(strings.TrimSpace(w[last]), focus, lenTarget, prefRight)
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -152,15 +156,11 @@ func Focus(text string, focus, lenTarget uint, preferRight bool) string {
 	return text
 }
 
-func Align(s string, lenTarget uint, toRight bool) string {
+func AlignRight(s string, lenTarget uint) string {
 	whiteLen := int(lenTarget) - len(s)
 	if whiteLen < 1 {
 		return s
 	}
-	whitespace := strings.Repeat(" ", whiteLen)
 
-	if toRight {
-		return whitespace + s
-	}
-	return s + whitespace
+	return strings.Repeat(" ", whiteLen) + s
 }

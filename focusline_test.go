@@ -32,7 +32,10 @@ func TestFocusRight(t *testing.T) {
 	assert.Equal(t, "xx", Focus("xx", 2, 0, false))
 }
 
-//
+func TestAlignRight(t *testing.T) {
+	t.Parallel()
+	assert.Equal(t, "     hello", AlignRight("hello", 10))
+}
 
 func TestFocusLineM1_5Wrap0(t *testing.T) {
 	t.Parallel()
