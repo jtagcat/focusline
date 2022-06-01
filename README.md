@@ -15,24 +15,24 @@ When needed, it will wrap lines.
  │              /         │   │              /         │
  │^__^         /          │   │             /          │
  │(oo)\_______            │   └────────────────────────┘
- │(__)\       )\/\        │
- │    ||----w | (cow from │   ┌────────────────────────┐
- │    ||     ||    cowsay)│   │ Change focus direction │
- └────────────────────────┘   └─┬─────┬───────┬─────┬──┘
-  ┌───────────────────────┐     │  ↓  │   ↓   │  ↓  │
-  │focus last, align rest │     │focus│ focus │focus│
-  └──┬─────────────────┬──┘     │  on │  and  │ on  │
-     │         ↓       │        │ left│breathe│rigt │
-     │iseenda eest on  │        │  /  │  /|\  │  \  │
-     │kõige raskem     │        │ /   │ / | \ │   \ │
-     │     põgeneda    │        └─────┴───────┴─────┘
+ │(__)\       )\/\        │    ┌───────────────────────┐
+ │    ||----w | (cow from │    │    focus direction    │
+ │    ||     ||    cowsay)│    └─┬─────┬───────┬─────┬─┘
+ └────────────────────────┘      │  ↓  │   ↓   │  ↓  │
+  ┌───────────────────────┐      │focus│ focus │focus│
+  │focus last, align rest │      │  on │  and  │ on  │
+  └──┬─────────────────┬──┘      │ left│breathe│rigt │
+     │         ↓       │         │  /  │  /|\  │  \  │
+     │iseenda eest on  │         │ /   │ / | \ │   \ │
+     │kõige raskem     │         └─────┴───────┴─────┘
+     │     põgeneda    │
      │         \       │
-     │          \ left │
-     ├─────────────────┤      Inspired by    Drawn in
-     │           ↓     │             cowsay    asciiflow
-     │  iseenda eest on│
-     │     kõige raskem│           │ focusline      │
-     │        põgeneda │           │     by jtagcat │
+     │          \ left │      Inspired by    Drawn in
+     ├─────────────────┤             cowsay    asciiflow
+     │           ↓     │
+     │  iseenda eest on│          │ focusline      │
+     │     kõige raskem│          │     by jtagcat │
+     │        põgeneda │
      │           /     │
      │    right /      │     Examples in README are tested.
      └─────────────────┘
