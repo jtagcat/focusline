@@ -245,7 +245,7 @@ func TestReadmeAlignLeft(t *testing.T) {
 	in := strings.NewReader(
 		"iseenda eest on\n" +
 			"kõige raskem\n" +
-			"põgeneda")
+			"põgeneda\n")
 	out, err := FocusReader(in, 10, 17, 1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
@@ -255,14 +255,13 @@ func TestReadmeAlignLeft(t *testing.T) {
 	}, out)
 }
 
-// FAILING
 func TestReadmeAlignRight(t *testing.T) {
 	t.Parallel()
 
 	in := strings.NewReader(
 		"iseenda eest on\n" +
 			"kõige raskem\n" +
-			"põgeneda")
+			"põgeneda\n")
 	out, err := FocusReader(in, 12, 17, 2)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{

@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/urfave/cli/v2"
 )
@@ -137,13 +138,13 @@ func StringsSplitEveryN(s string, n uint) (o []string) {
 	if n == 0 {
 		return []string{s}
 	}
-	u := int(n)
-	for i := 0; i < len(s); i += u {
-		if u > len(s)-i {
+	u, r := int(n), []rune(s)
+	for i := 0; i < len(r); i += u {
+		if u > len(r)-i {
 			// last (unfinished) piece
-			u = len(s) - i
+			u = len(r) - i
 		}
-		o = append(o, s[i:i+u])
+		o = append(o, string(r[i:i+u]))
 	}
 	return
 }
@@ -158,17 +159,18 @@ func Focus(text string, focus, lenTarget uint, preferRight bool) string {
 	if lenTarget != 0 && focus > lenTarget {
 		// lenTarget unreasonable, err?
 	}
+	tlen := utf8.RuneCountInString(text)
 
-	textBeforeFocus := (len(text) / 2) + 1
-	if (len(text)%2) == 0 && !preferRight {
+	textBeforeFocus := (tlen / 2) + 1
+	if (tlen%2) == 0 && !preferRight {
 		textBeforeFocus -= 1
 	}
 
 	whiteLen := int(focus) - textBeforeFocus
 
 	if whiteLen > 0 {
-		if lenTarget != 0 && (len(text)+whiteLen) >= int(lenTarget) {
-			whiteLen = int(lenTarget) - len(text)
+		if lenTarget != 0 && (tlen+whiteLen) >= int(lenTarget) {
+			whiteLen = int(lenTarget) - tlen
 		}
 		return strings.Repeat(" ", whiteLen) + text
 	}
@@ -176,7 +178,7 @@ func Focus(text string, focus, lenTarget uint, preferRight bool) string {
 }
 
 func AlignRight(s string, lenTarget uint) string {
-	whiteLen := int(lenTarget) - len(s)
+	whiteLen := int(lenTarget) - utf8.RuneCountInString(s)
 	if whiteLen < 1 {
 		return s
 	}
