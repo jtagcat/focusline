@@ -81,12 +81,13 @@ func main() {
 	}
 }
 
-// TODO:
+// Focuses lines of text.
 //
 // mode: -1: focus all lines, prefer left
 // mode:  0: focus all lines, prefer right
 // mode:  1: left-align all lines, focus last line, prefer left
 // mode:  2: right-align all lines, focus last line, prefer right
+// TODO: StringsSplitEveryN: try to split at spaces
 func FocusReader(r io.Reader, focus, lenTarget uint, mode int) (w []string, _ error) {
 	var prefRight, focusAll bool
 	switch mode {
@@ -121,6 +122,7 @@ func FocusReader(r io.Reader, focus, lenTarget uint, mode int) (w []string, _ er
 	}
 	if !focusAll {
 		last := len(w) - 1
+		prefRight = !prefRight // mirror last for better astetiks
 		w[last] = Focus(strings.TrimSpace(w[last]), focus, lenTarget, prefRight)
 	}
 
