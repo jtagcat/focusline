@@ -43,12 +43,16 @@ func main() {
 			}
 
 			fWrap := c.Int("wrap")
-			if fWrap <= focus {
+			if fWrap > 0 && fWrap <= focus {
 				return fmt.Errorf("flag \"wrap\" (%d) must be a larger value than focus (%d)", fWrap, focus)
 			} // TODO: errors might be better upstream?
 
-			out, err := FocusReader(os.Stdin, uint(focus), uint(fWrap), -2)
-			fmt.Println(out)
+			// out, err := FocusReader(os.Stdin, uint(focus), uint(fWrap), 2)
+			r, _ := os.Open("test")
+			out, err := FocusReader(r, uint(focus), uint(fWrap), 2)
+			for _, o := range out {
+				fmt.Println(o)
+			}
 			return err
 		},
 	}
@@ -69,9 +73,9 @@ func FocusReader(r io.Reader, focus, wrap uint, mode int) (w []string, _ error) 
 	var prefBool, focusAll bool
 	switch mode {
 	case -1, 1:
-		prefBool = true
-	case 0, 2:
 		prefBool = false
+	case 0, 2:
+		prefBool = true
 	default:
 		return w, fmt.Errorf("runtime enum: FocusReader: mode %d is invalid", mode)
 	}
@@ -90,10 +94,10 @@ func FocusReader(r io.Reader, focus, wrap uint, mode int) (w []string, _ error) 
 				w = append(w, Align(l, wrap, prefBool))
 			}
 		}
-		if !focusAll {
-			last := len(w) - 1
-			w[last] = Focus(w[last], focus, wrap, prefBool)
-		}
+	}
+	if !focusAll {
+		last := len(w) - 1
+		w[last] = Focus(strings.TrimSpace(w[last]), focus, wrap, prefBool)
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -124,31 +128,31 @@ func StringsSplitEveryN(s string, n uint) (o []string) {
 // "       tere" text shifted to right or  | left| |rigt |
 // target:  ^^    left (preferLeft=true)   |  /  | |  \  |
 //          LR                             | /   | |   \ |
-func Focus(text string, focus, maxLen uint, preferLeft bool) string {
+func Focus(text string, focus, maxLen uint, preferRight bool) string {
 	// TODO: check input sanity; is maxLen right place?
 	// TODO: swap right/left
 	textBeforeFocus := (len(text) / 2) + 1
-	if (len(text)%2) == 0 && preferLeft {
+	if (len(text)%2) == 0 && !preferRight {
 		textBeforeFocus -= 1
 	}
 
-	whitespace := int(focus) - textBeforeFocus
+	whiteLen := int(focus) - textBeforeFocus
 
-	if whitespace > 0 {
-		if maxLen > 0 && (len(text)+whitespace) >= int(maxLen) {
-			whitespace = int(maxLen) - len(text)
+	if whiteLen > 0 {
+		if maxLen > 0 && (len(text)+whiteLen) >= int(maxLen) {
+			whiteLen = int(maxLen) - len(text)
 		}
-		return strings.Repeat(" ", whitespace) + text
+		return strings.Repeat(" ", whiteLen) + text
 	}
 	return text
 }
 
 func Align(s string, maxLen uint, toRight bool) string {
-	whitelen := int(maxLen) - len(s)
-	if whitelen < 1 {
+	whiteLen := int(maxLen) - len(s)
+	if whiteLen < 1 {
 		return s
 	}
-	whitespace := strings.Repeat(" ", whitelen)
+	whitespace := strings.Repeat(" ", whiteLen)
 
 	if toRight {
 		return whitespace + s
