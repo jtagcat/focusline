@@ -11,7 +11,7 @@ import (
 
 var App = &cli.App{
 	Name:    "focusline",
-	Version: "0.1.0",
+	Version: "1.0.0",
 	Authors: []*cli.Author{{Name: "jtagcat"}}, // TODO: Email: ""
 
 	Description: "Center text aiming at nth character.",
