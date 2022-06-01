@@ -88,7 +88,6 @@ func FocusReader(r io.Reader, focus, lenTarget uint, mode int) (w []string, _ er
 
 	scanner := bufio.NewScanner(r)
 	for i := 1; scanner.Scan(); i++ {
-
 		line := StringsSplitEveryN(scanner.Text(), lenTarget)
 		for _, l := range line {
 			if focusAll {

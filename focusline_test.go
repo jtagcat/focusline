@@ -104,3 +104,75 @@ func TestFocusLine0_4Wrap6(t *testing.T) {
 	},
 		out)
 }
+
+func TestFocusLine1_5Wrap0(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader("0\n" +
+		"12345\n" +
+		"1234\n" +
+		"123456\n")
+	out, err := FocusReader(in, 3, 0, 1)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"0",
+		"12345",
+		"1234",
+		"123456",
+	},
+		out)
+}
+
+func TestFocusLine1_4Wrap6(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader("0\n" +
+		"123456\n" +
+		"12345678\n")
+	out, err := FocusReader(in, 4, 6, 1)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"0",
+		"123456",
+		"123456", "   78",
+	},
+		out)
+}
+
+func TestFocusLine2_5Wrap0(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader("0\n" +
+		"12345\n" +
+		"1234\n" +
+		"123456\n" +
+		"0\n")
+	out, err := FocusReader(in, 3, 0, 2)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"0",
+		"12345",
+		"1234",
+		"123456",
+		"  0",
+	},
+		out)
+}
+
+func TestFocusLine2_4Wrap6(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader("0\n" +
+		"123456\n" +
+		"12345678\n" +
+		"0\n")
+	out, err := FocusReader(in, 4, 6, 2)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"     0",
+		"123456",
+		"123456", "    78",
+		"   0",
+	},
+		out)
+}
