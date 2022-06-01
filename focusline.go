@@ -67,7 +67,7 @@ import (
 // mode:  1: left-align all lines, focus last line, prefer left
 // mode:  2: right-align all lines, focus last line, prefer right
 func FocusReader(r io.Reader, focus, wrap uint, mode int) (w []string, _ error) {
-	var prefBool bool
+	var prefBool, focusAll bool
 	switch mode {
 	case -1, 1:
 		prefBool = true
@@ -76,20 +76,25 @@ func FocusReader(r io.Reader, focus, wrap uint, mode int) (w []string, _ error) 
 	default:
 		return w, fmt.Errorf("runtime enum: FocusReader: mode %d is invalid", mode)
 	}
+	if mode == -1 || mode == 0 {
+		focusAll = true
+	}
 
 	scanner := bufio.NewScanner(r)
 	for i := 1; scanner.Scan(); i++ {
-		// line := []string{scanner.Text()}
+
 		line := StringsSplitEveryN(scanner.Text(), wrap)
 		for _, l := range line {
-			w = append(w, Focus(l, focus, wrap, prefBool))
+			if focusAll {
+				w = append(w, Focus(l, focus, wrap, prefBool))
+			} else {
+				w = append(w, Align(l, wrap, prefBool))
+			}
 		}
-		// if fWrap != 0 {
-		// 	line = StringsSplitEveryN(line[0], fWrap)
-		// }
-		// for _, l := range line {
-		// 	output(Focus(l, focus, false))
-		// }
+		if !focusAll {
+			last := len(w) - 1
+			w[last] = Focus(w[last], focus, wrap, prefBool)
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -122,6 +127,7 @@ func StringsSplitEveryN(s string, n uint) (o []string) {
 //          LR                             | /   | |   \ |
 func Focus(text string, focus, maxLen uint, preferLeft bool) string {
 	// TODO: check input sanity; is maxLen right place?
+	// TODO: swap right/left
 	textBeforeFocus := (len(text) / 2) + 1
 	if (len(text)%2) == 0 && preferLeft {
 		textBeforeFocus -= 1
@@ -136,4 +142,17 @@ func Focus(text string, focus, maxLen uint, preferLeft bool) string {
 		return strings.Repeat(" ", whitespace) + text
 	}
 	return text
+}
+
+func Align(s string, maxLen uint, toRight bool) string {
+	whitelen := int(maxLen) - len(s)
+	if whitelen < 1 {
+		return s
+	}
+	whitespace := strings.Repeat(" ", whitelen)
+
+	if toRight {
+		return whitespace + s
+	}
+	return s + whitespace
 }
