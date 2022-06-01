@@ -24,12 +24,12 @@ func TestFocusEqual(t *testing.T) {
 
 func TestFocusLeft(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, " xx", Focus("xx", 2, 0, true))
+	assert.Equal(t, " xx", Focus("xx", 2, 0, false))
 }
 
 func TestFocusRight(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, "xx", Focus("xx", 2, 0, false))
+	assert.Equal(t, "xx", Focus("xx", 2, 0, true))
 }
 
 func TestAlignRight(t *testing.T) {
@@ -134,7 +134,7 @@ func TestFocusLine1_4Wrap6(t *testing.T) {
 	assert.Equal(t, []string{
 		"0",
 		"123456",
-		"123456", "   78",
+		"123456", "  78",
 	},
 		out)
 }
