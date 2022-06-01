@@ -26,7 +26,18 @@ func main() {
 				Usage:    "per-line character limit",
 				Required: false,
 			},
-			// center; except last: left-align, right-align
+			&cli.BoolFlag{
+				Name:     "right",
+				Aliases:  []string{"r"},
+				Usage:    "prefer right instead of left",
+				Required: false,
+			},
+			&cli.BoolFlag{
+				Name:     "last",
+				Aliases:  []string{"l"},
+				Usage:    "focus only last, align others to wrap",
+				Required: false,
+			},
 		},
 		EnableBashCompletion: true,
 
@@ -42,14 +53,21 @@ func main() {
 				return fmt.Errorf("argument focusChar must be an integer")
 			}
 
+			var mode int
+			if c.Bool("last") {
+				mode += 1
+			}
+			if c.Bool("right") {
+				mode += 1
+			}
+
+			// TODO: errors might be better upstream?
 			fWrap := c.Int("wrap")
 			if fWrap > 0 && fWrap <= focus {
 				return fmt.Errorf("flag \"wrap\" (%d) must be a larger value than focus (%d)", fWrap, focus)
-			} // TODO: errors might be better upstream?
+			}
 
-			// out, err := FocusReader(os.Stdin, uint(focus), uint(fWrap), 2)
-			r, _ := os.Open("test")
-			out, err := FocusReader(r, uint(focus), uint(fWrap), 2)
+			out, err := FocusReader(os.Stdin, uint(focus), uint(fWrap), mode)
 			for _, o := range out {
 				fmt.Println(o)
 			}
