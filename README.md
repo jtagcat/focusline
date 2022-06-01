@@ -28,12 +28,12 @@ When needed, it will wrap lines.
      │     põgeneda    │        └─────┴───────┴─────┘
      │         \       │
      │          \ left │
-     ├─────────────────┤    Inspired by    Drawn in
-     │           ↓     │           cowsay    asciiflow
+     ├─────────────────┤      Inspired by    Drawn in
+     │           ↓     │             cowsay    asciiflow
      │  iseenda eest on│
-     │     kõige raskem│         │ focusline      │
-     │        põgeneda │         │     by jtagcat │
+     │     kõige raskem│           │ focusline      │
+     │        põgeneda │           │     by jtagcat │
      │           /     │
-     │    right /      │   Examples in README are tested.
+     │    right /      │     Examples in README are tested.
      └─────────────────┘
 ```
