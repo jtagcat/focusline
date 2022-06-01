@@ -1,40 +1,41 @@
-package main
+package pkg_test
 
 import (
 	"strings"
 	"testing"
 
+	"github.com/jtagcat/focusline/pkg"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFocusNothing(t *testing.T) {
 	t.Parallel()
 	for _, x := range []bool{false, true} {
-		assert.Equal(t, "123", Focus("123", 2, 0, x))
+		assert.Equal(t, "123", pkg.Focus("123", 2, 0, x))
 	}
 }
 
 func TestFocusEqual(t *testing.T) {
 	t.Parallel()
 	for _, x := range []bool{false, true} {
-		assert.Equal(t, " 123", Focus("123", 3, 0, x))
-		assert.Equal(t, "  x", Focus("x", 3, 0, x))
+		assert.Equal(t, " 123", pkg.Focus("123", 3, 0, x))
+		assert.Equal(t, "  x", pkg.Focus("x", 3, 0, x))
 	}
 }
 
 func TestFocusLeft(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, " xx", Focus("xx", 2, 0, false))
+	assert.Equal(t, " xx", pkg.Focus("xx", 2, 0, false))
 }
 
 func TestFocusRight(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, "xx", Focus("xx", 2, 0, true))
+	assert.Equal(t, "xx", pkg.Focus("xx", 2, 0, true))
 }
 
 func TestAlignRight(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, "     hello", AlignRight("hello", 10))
+	assert.Equal(t, "     hello", pkg.AlignRight("hello", 10))
 }
 
 func TestFocusLineM1_5Wrap0(t *testing.T) {
@@ -44,7 +45,7 @@ func TestFocusLineM1_5Wrap0(t *testing.T) {
 		"12345\n" +
 		"1234\n" +
 		"123456\n")
-	out, err := FocusReader(in, 3, 0, -1)
+	out, err := pkg.FocusReader(in, 3, 0, -1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"  0",
@@ -61,7 +62,7 @@ func TestFocusLineM1_4Wrap6(t *testing.T) {
 	in := strings.NewReader("0\n" +
 		"123456\n" +
 		"12345678\n")
-	out, err := FocusReader(in, 4, 6, -1)
+	out, err := pkg.FocusReader(in, 4, 6, -1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"   0",
@@ -78,7 +79,7 @@ func TestFocusLine0_5Wrap0(t *testing.T) {
 		"12345\n" +
 		"1234\n" +
 		"123456\n")
-	out, err := FocusReader(in, 3, 0, 0)
+	out, err := pkg.FocusReader(in, 3, 0, 0)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"  0",
@@ -95,7 +96,7 @@ func TestFocusLine0_4Wrap6(t *testing.T) {
 	in := strings.NewReader("0\n" +
 		"123456\n" +
 		"12345678\n")
-	out, err := FocusReader(in, 4, 6, 0)
+	out, err := pkg.FocusReader(in, 4, 6, 0)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"   0",
@@ -112,7 +113,7 @@ func TestFocusLine1_5Wrap0(t *testing.T) {
 		"12345\n" +
 		"1234\n" +
 		"123456\n")
-	out, err := FocusReader(in, 3, 0, 1)
+	out, err := pkg.FocusReader(in, 3, 0, 1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"0",
@@ -129,7 +130,7 @@ func TestFocusLine1_4Wrap6(t *testing.T) {
 	in := strings.NewReader("0\n" +
 		"123456\n" +
 		"12345678\n")
-	out, err := FocusReader(in, 4, 6, 1)
+	out, err := pkg.FocusReader(in, 4, 6, 1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"0",
@@ -147,7 +148,7 @@ func TestFocusLine2_5Wrap0(t *testing.T) {
 		"1234\n" +
 		"123456\n" +
 		"0\n")
-	out, err := FocusReader(in, 3, 0, 2)
+	out, err := pkg.FocusReader(in, 3, 0, 2)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"0",
@@ -166,7 +167,7 @@ func TestFocusLine2_4Wrap6(t *testing.T) {
 		"123456\n" +
 		"12345678\n" +
 		"0\n")
-	out, err := FocusReader(in, 4, 6, 2)
+	out, err := pkg.FocusReader(in, 4, 6, 2)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"     0",
@@ -184,7 +185,7 @@ func TestReadmeCenter(t *testing.T) {
 
 	in := strings.NewReader(
 		"lorem ipsum dolor\n")
-	out, err := FocusReader(in, 16, 24, -1)
+	out, err := pkg.FocusReader(in, 16, 24, -1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"       lorem ipsum dolor",
@@ -196,7 +197,7 @@ func TestReadmeEOLine(t *testing.T) {
 
 	in := strings.NewReader(
 		"lorem ipsum dolor sit\n")
-	out, err := FocusReader(in, 16, 24, -1)
+	out, err := pkg.FocusReader(in, 16, 24, -1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"   lorem ipsum dolor sit",
@@ -208,7 +209,7 @@ func TestReadmeFocusLeft(t *testing.T) {
 
 	in := strings.NewReader(
 		"focus\non\nleft\n")
-	out, err := FocusReader(in, 3, 0, -1)
+	out, err := pkg.FocusReader(in, 3, 0, -1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"focus", "  on", " left",
@@ -220,7 +221,7 @@ func TestReadmeFocusRight(t *testing.T) {
 
 	in := strings.NewReader(
 		"focus\non\nrigt\n")
-	out, err := FocusReader(in, 3, 0, 0)
+	out, err := pkg.FocusReader(in, 3, 0, 0)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"focus", " on", "rigt",
@@ -232,7 +233,7 @@ func TestReadmeFocusCenter(t *testing.T) {
 
 	in := strings.NewReader(
 		"focus\nand\nbreathe\n")
-	out, err := FocusReader(in, 4, 0, -1)
+	out, err := pkg.FocusReader(in, 4, 0, -1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		" focus", "  and", "breathe",
@@ -246,7 +247,7 @@ func TestReadmeAlignLeft(t *testing.T) {
 		"iseenda eest on\n" +
 			"kõige raskem\n" +
 			"põgeneda\n")
-	out, err := FocusReader(in, 10, 17, 1)
+	out, err := pkg.FocusReader(in, 10, 17, 1)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"iseenda eest on",
@@ -262,7 +263,7 @@ func TestReadmeAlignRight(t *testing.T) {
 		"iseenda eest on\n" +
 			"kõige raskem\n" +
 			"põgeneda\n")
-	out, err := FocusReader(in, 12, 17, 2)
+	out, err := pkg.FocusReader(in, 12, 17, 2)
 	assert.Nil(t, err)
 	assert.Equal(t, []string{
 		"  iseenda eest on",
