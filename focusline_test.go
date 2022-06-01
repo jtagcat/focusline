@@ -176,3 +176,98 @@ func TestFocusLine2_4Wrap6(t *testing.T) {
 	},
 		out)
 }
+
+//
+
+func TestReadmeCenter(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader(
+		"lorem ipsum dolor\n")
+	out, err := FocusReader(in, 16, 24, -1)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"       lorem ipsum dolor",
+	}, out)
+}
+
+func TestReadmeEOLine(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader(
+		"lorem ipsum dolor sit\n")
+	out, err := FocusReader(in, 16, 24, -1)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"   lorem ipsum dolor sit",
+	}, out)
+}
+
+func TestReadmeFocusLeft(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader(
+		"focus\non\nleft\n")
+	out, err := FocusReader(in, 3, 0, -1)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"focus", "  on", " left",
+	}, out)
+}
+
+func TestReadmeFocusRight(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader(
+		"focus\non\nrigt\n")
+	out, err := FocusReader(in, 3, 0, 0)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"focus", " on", "rigt",
+	}, out)
+}
+
+func TestReadmeFocusCenter(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader(
+		"focus\nand\nbreathe\n")
+	out, err := FocusReader(in, 4, 0, -1)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		" focus", "  and", "breathe",
+	}, out)
+}
+
+func TestReadmeAlignLeft(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader(
+		"iseenda eest on\n" +
+			"kõige raskem\n" +
+			"põgeneda")
+	out, err := FocusReader(in, 10, 17, 1)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"iseenda eest on",
+		"kõige raskem",
+		"     põgeneda",
+	}, out)
+}
+
+// FAILING
+func TestReadmeAlignRight(t *testing.T) {
+	t.Parallel()
+
+	in := strings.NewReader(
+		"iseenda eest on\n" +
+			"kõige raskem\n" +
+			"põgeneda")
+	out, err := FocusReader(in, 12, 17, 2)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{
+		"  iseenda eest on",
+		"     kõige raskem",
+		"        põgeneda",
+	}, out)
+}

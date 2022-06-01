@@ -17,7 +17,7 @@ When needed, it will wrap lines.
  │(oo)\_______            │   └────────────────────────┘
  │(__)\       )\/\        │
  │    ||----w | (cow from │   ┌────────────────────────┐
- │    ||     ||    cowsay)│   │ Change align direction │
+ │    ||     ||    cowsay)│   │ Change focus direction │
  └────────────────────────┘   └─┬─────┬───────┬─────┬──┘
   ┌───────────────────────┐     │  ↓  │   ↓   │  ↓  │
   │focus last, align rest │     │focus│ focus │focus│
@@ -27,13 +27,13 @@ When needed, it will wrap lines.
      │kõige raskem     │        │ /   │ / | \ │   \ │
      │     põgeneda    │        └─────┴───────┴─────┘
      │         \       │
-     │          \ right│
+     │          \ left │
      ├─────────────────┤    Inspired by    Drawn in
      │           ↓     │           cowsay    asciiflow
      │  iseenda eest on│
      │     kõige raskem│         │ focusline      │
      │        põgeneda │         │     by jtagcat │
      │           /     │
-     │     left /      │
+     │    right /      │   Examples in README are tested.
      └─────────────────┘
 ```
