@@ -69,7 +69,7 @@ func main() {
 // mode:  0: focus all lines, prefer right
 // mode:  1: left-align all lines, focus last line, prefer left
 // mode:  2: right-align all lines, focus last line, prefer right
-func FocusReader(r io.Reader, focus, wrap uint, mode int) (w []string, _ error) {
+func FocusReader(r io.Reader, focus, lenTarget uint, mode int) (w []string, _ error) {
 	var prefBool, focusAll bool
 	switch mode {
 	case -1, 1:
@@ -82,22 +82,25 @@ func FocusReader(r io.Reader, focus, wrap uint, mode int) (w []string, _ error) 
 	if mode == -1 || mode == 0 {
 		focusAll = true
 	}
+	if lenTarget != 0 && focus > lenTarget {
+		// TODO: or upstream?
+	}
 
 	scanner := bufio.NewScanner(r)
 	for i := 1; scanner.Scan(); i++ {
 
-		line := StringsSplitEveryN(scanner.Text(), wrap)
+		line := StringsSplitEveryN(scanner.Text(), lenTarget)
 		for _, l := range line {
 			if focusAll {
-				w = append(w, Focus(l, focus, wrap, prefBool))
+				w = append(w, Focus(l, focus, lenTarget, prefBool))
 			} else {
-				w = append(w, Align(l, wrap, prefBool))
+				w = append(w, Align(l, lenTarget, prefBool))
 			}
 		}
 	}
 	if !focusAll {
 		last := len(w) - 1
-		w[last] = Focus(strings.TrimSpace(w[last]), focus, wrap, prefBool)
+		w[last] = Focus(strings.TrimSpace(w[last]), focus, lenTarget, prefBool)
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -123,14 +126,16 @@ func StringsSplitEveryN(s string, n uint) (o []string) {
 }
 
 // Centers string by prepending whitespace |  ↓  | |  ↓  |
-// maxLen is a soft limit for whitespaces  |focus| |focus|
+// lenTarget: soft limit for prewhitespace |focus| |focus|
 // "      hello" when forced unsymetrical, |  on | | on  |
 // "       tere" text shifted to right or  | left| |rigt |
 // target:  ^^    left (preferLeft=true)   |  /  | |  \  |
 //          LR                             | /   | |   \ |
-func Focus(text string, focus, maxLen uint, preferRight bool) string {
-	// TODO: check input sanity; is maxLen right place?
-	// TODO: swap right/left
+func Focus(text string, focus, lenTarget uint, preferRight bool) string {
+	if lenTarget != 0 && focus > lenTarget {
+		// lenTarget unreasonable, err?
+	}
+
 	textBeforeFocus := (len(text) / 2) + 1
 	if (len(text)%2) == 0 && !preferRight {
 		textBeforeFocus -= 1
@@ -139,16 +144,16 @@ func Focus(text string, focus, maxLen uint, preferRight bool) string {
 	whiteLen := int(focus) - textBeforeFocus
 
 	if whiteLen > 0 {
-		if maxLen > 0 && (len(text)+whiteLen) >= int(maxLen) {
-			whiteLen = int(maxLen) - len(text)
+		if lenTarget != 0 && (len(text)+whiteLen) >= int(lenTarget) {
+			whiteLen = int(lenTarget) - len(text)
 		}
 		return strings.Repeat(" ", whiteLen) + text
 	}
 	return text
 }
 
-func Align(s string, maxLen uint, toRight bool) string {
-	whiteLen := int(maxLen) - len(s)
+func Align(s string, lenTarget uint, toRight bool) string {
+	whiteLen := int(lenTarget) - len(s)
 	if whiteLen < 1 {
 		return s
 	}
