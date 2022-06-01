@@ -4,61 +4,60 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"os"
+	"strconv"
 	"strings"
+
+	"github.com/urfave/cli/v2"
 )
 
-// func main() {
-// 	app := &cli.App{
-// 		Name:    "focusline",
-// 		Version: "0.1.0",
-// 		Authors: []*cli.Author{{Name: "jtagcat"}}, // TODO: Email: ""
+func main() {
+	app := &cli.App{
+		Name:    "focusline",
+		Version: "0.1.0",
+		Authors: []*cli.Author{{Name: "jtagcat"}}, // TODO: Email: ""
 
-// 		Description: "Center text aiming at nth character.",
-// 		Usage:       "focusline <focus> <stdin",
-// 		Flags: []cli.Flag{
-// 			&cli.IntFlag{
-// 				Name:     "wrap",
-// 				Aliases:  []string{"w"},
-// 				Usage:    "per-line character limit",
-// 				Required: false,
-// 			},
-// 			// center; except last: left-align, right-align
-// 		},
-// 		EnableBashCompletion: true,
+		Description: "Center text aiming at nth character.",
+		Usage:       "focusline <focus> <stdin",
+		Flags: []cli.Flag{
+			&cli.IntFlag{
+				Name:     "wrap",
+				Aliases:  []string{"w"},
+				Usage:    "per-line character limit",
+				Required: false,
+			},
+			// center; except last: left-align, right-align
+		},
+		EnableBashCompletion: true,
 
-// 		Action: func(c *cli.Context) error {
-// 			args := c.Args()
-// 			if args.Len() != 1 {
-// 				return fmt.Errorf("expected exactly 1 argument, got %d", args.Len())
-// 			}
+		Action: func(c *cli.Context) error {
+			args := c.Args()
+			if args.Len() != 1 {
+				return fmt.Errorf("expected exactly 1 argument, got %d", args.Len())
+			}
 
-// 			focusStr := args.First()
-// 			focus, err := strconv.Atoi(focusStr)
-// 			if err != nil {
-// 				return fmt.Errorf("argument focusChar must be an integer")
-// 			}
+			focusStr := args.First()
+			focus, err := strconv.Atoi(focusStr)
+			if err != nil {
+				return fmt.Errorf("argument focusChar must be an integer")
+			}
 
-// 			fWrap := c.Int("wrap")
-// 			if fWrap <= focus {
-// 				return fmt.Errorf("flag \"wrap\" (%d) must be a larger value than focus (%d)", fWrap, focus)
-// 			}
+			fWrap := c.Int("wrap")
+			if fWrap <= focus {
+				return fmt.Errorf("flag \"wrap\" (%d) must be a larger value than focus (%d)", fWrap, focus)
+			} // TODO: errors might be better upstream?
 
-// 			// scanner, once := bufio.NewScanner(os.Stdin), false // TODO:
-// 			xyz, _ := os.Open("test")
-
-// 			return nil
-// 		},
-// 	}
-// 	err := app.Run(os.Args)
-// 	if err != nil {
-// 		fmt.Fprintln(os.Stderr, "error:", err.Error())
-// 		os.Exit(1)
-// 	}
-// }
-
-// func output(line string) {
-// 	fmt.Println(line)
-// }
+			out, err := FocusReader(os.Stdin, uint(focus), uint(fWrap), -2)
+			fmt.Println(out)
+			return err
+		},
+	}
+	err := app.Run(os.Args)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "error:", err.Error())
+		os.Exit(1)
+	}
+}
 
 // TODO:
 //
