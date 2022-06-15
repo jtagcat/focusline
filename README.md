@@ -1,6 +1,6 @@
 # focusline
 
-Focuses text to nth character. Dependancy for cowsay, but for other animals
+Focuses text to nth character. Dependency for cowsay, but for other animals
 
 Given a wrapping point, say 80 chars, it will shift the text from focus to fit it.
 When needed, it will wrap lines.
