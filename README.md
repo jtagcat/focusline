@@ -1,4 +1,7 @@
 # focusline
+```sh
+go install github.com/jtagcat/focusline@latest
+```
 
 Focuses text to nth character. Dependency for cowsay, but for other animals
 
